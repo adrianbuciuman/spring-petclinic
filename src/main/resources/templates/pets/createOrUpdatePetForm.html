@@ -20,6 +20,15 @@
         th:replace="~{fragments/inputField :: input ('Name', 'name')}" />
       <input
         th:replace="~{fragments/inputField :: input ('Birth Date', 'birthDate')}" />
+        <script th:inline="javascript">
+        $(function() {
+            $('#birthDate').datepicker({
+                dateFormat: 'yy/mm/dd',
+                });
+        });
+        </script>
+      <input
+        th:replace="~{fragments/inputField :: input ('Weight', 'weight')}" />
       <input
         th:replace="~{fragments/selectField :: select ('Type', 'type', ${types})}" />
     </div>

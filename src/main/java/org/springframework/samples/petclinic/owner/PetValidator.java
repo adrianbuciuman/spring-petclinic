@@ -22,7 +22,8 @@ import org.springframework.validation.Validator;
 /**
  * <code>Validator</code> for <code>Pet</code> forms.
  * <p>
- * We're not using Bean Validation annotations here because it is easier to define such validation rule in Java.
+ * We're not using Bean Validation annotations here because it is easier to
+ * define such validation rule in Java.
  * </p>
  *
  * @author Ken Krebs
@@ -50,6 +51,11 @@ public class PetValidator implements Validator {
         if (pet.getBirthDate() == null) {
             errors.rejectValue("birthDate", REQUIRED, REQUIRED);
         }
+
+        // Weight validation
+        if (pet.getWeight() == null || pet.getWeight() <= 0.5 || pet.getWeight() > 2000.89) {
+            errors.rejectValue("weight", "OUTSIDE_INTERVAL", "The weight must be between 0.5kg and 2000.89kg");
+        }
     }
 
     /**
@@ -59,6 +65,5 @@ public class PetValidator implements Validator {
     public boolean supports(Class<?> clazz) {
         return Pet.class.isAssignableFrom(clazz);
     }
-
 
 }

@@ -56,6 +56,9 @@ public class Pet extends NamedEntity {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private Date birthDate;
 
+    @Column(name = "weight")
+    private Double weight;
+    
     @ManyToOne
     @JoinColumn(name = "type_id")
     private PetType type;
@@ -73,6 +76,14 @@ public class Pet extends NamedEntity {
 
     public Date getBirthDate() {
         return this.birthDate;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
     public PetType getType() {
