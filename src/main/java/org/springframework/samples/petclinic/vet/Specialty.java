@@ -31,4 +31,13 @@ import org.springframework.samples.petclinic.model.NamedEntity;
 @Table(name = "specialties")
 public class Specialty extends NamedEntity implements Serializable {
 
+    @Override
+    public int hashCode() {
+        return super.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.getId().equals(((Specialty) obj).getId());
+    }
 }

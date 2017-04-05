@@ -17,9 +17,15 @@ package org.springframework.samples.petclinic.vet;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -33,6 +39,8 @@ class VetController {
 
     private final VetRepository vets;
 
+    private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "vets/createOrUpdateVetForm";
+
     @Autowired
     public VetController(VetRepository clinicService) {
         this.vets = clinicService;
@@ -40,7 +48,8 @@ class VetController {
 
     @RequestMapping(value = { "/vets.html" })
     public String showVetList(Map<String, Object> model) {
-        // Here we are returning an object of type 'Vets' rather than a collection of Vet
+        // Here we are returning an object of type 'Vets' rather than a
+        // collection of Vet
         // objects so it is simpler for Object-Xml mapping
         Vets vets = new Vets();
         vets.getVetList().addAll(this.vets.findAll());
@@ -50,11 +59,29 @@ class VetController {
 
     @RequestMapping(value = { "/vets.json", "/vets.xml" })
     public @ResponseBody Vets showResourcesVetList() {
-        // Here we are returning an object of type 'Vets' rather than a collection of Vet
+        // Here we are returning an object of type 'Vets' rather than a
+        // collection of Vet
         // objects so it is simpler for JSon/Object mapping
         Vets vets = new Vets();
         vets.getVetList().addAll(this.vets.findAll());
         return vets;
     }
 
+    @RequestMapping(value = "/vets/new", method = RequestMethod.GET)
+    public String initCreationForm(Map<String, Object> model) {
+        Vet vet = new Vet();
+        model.put("vet", vet);
+        model.put("vetSpecialties", this.vets.findVetSpecialties());
+        return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+    }
+
+    @RequestMapping(value = "/vets/new", method = RequestMethod.POST)
+    public String processCreationForm(@Valid Vet vet, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+        } else {
+            this.vets.save(vet);
+            return "vets/vetList";
+        }
+    }
 }

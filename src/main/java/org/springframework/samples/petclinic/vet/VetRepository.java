@@ -16,15 +16,22 @@
 package org.springframework.samples.petclinic.vet;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Repository class for <code>Vet</code> domain objects All method names are compliant with Spring Data naming
- * conventions so this interface can easily be extended for Spring Data See here: http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
+ * Repository class for <code>Vet</code> domain objects All method names are
+ * compliant with Spring Data naming conventions so this interface can easily be
+ * extended for Spring Data See here:
+ * http://static.springsource.org/spring-data/jpa/docs/current/reference/html/
+ * jpa.repositories.html#jpa.query-methods.query-creation
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
@@ -42,5 +49,9 @@ public interface VetRepository extends Repository<Vet, Integer> {
     @Cacheable("vets")
     Collection<Vet> findAll() throws DataAccessException;
 
+    @Query("SELECT spec FROM Specialty spec ORDER BY spec.name")
+    @Transactional(readOnly = true)
+    List<Specialty> findVetSpecialties();
 
+    void save(Vet vet);
 }
